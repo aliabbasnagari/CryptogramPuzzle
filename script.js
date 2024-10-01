@@ -198,6 +198,21 @@ function arraysEqual(arr1, arr2) {
 	return arr1.length === arr2.length && arr1.every((element, index) => element === arr2[index]);
 }
 
+function formatWinTime(timeString) {
+	const [hours, minutes, seconds] = timeString.split(':').map(Number);
+	const parts = [];
+	if (hours > 0) {
+		parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+	}
+	if (minutes > 0) {
+		parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+	}
+	if (seconds > 0) {
+		parts.push(`${seconds} second${seconds > 1 ? 's' : ''}`);
+	}
+	return parts.join(' ') || '0 seconds';
+}
+
 function updateCharacter(original, character) {
 	character = character.toUpperCase();
 	container.querySelectorAll(".character-box").forEach((box) => {
@@ -216,7 +231,7 @@ function updateCharacter(original, character) {
 		let title = popup.querySelector('h2');
 		let message = popup.querySelector('p');
 		title.innerHTML = "&#127881 Nice Going!";
-		message.innerHTML = "Congrats, you have complete the puzzle in " + stopwatchDisplay.textContent + `<br><h4>Hints Used: ${hintsUsed}</h4>`;
+		message.innerHTML = `Congrats! You solved the puzzle in ${formatWinTime(stopwatchDisplay.textContent)}.<br>(${stopwatchDisplay.textContent})<br><h4>Hints Used: ${hintsUsed}</h4>`;
 		popup.style.display = 'block';
 		stopStopwatch();
 		resetStopwatch();

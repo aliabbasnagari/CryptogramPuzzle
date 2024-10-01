@@ -9,7 +9,6 @@ div.dotted-line {
     margin: auto;
     height: 100vh;
     overflow-y: scroll;
-    background-color: antiquewhite;
     padding-bottom: 200px;
 }
 
