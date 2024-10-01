@@ -1,0 +1,126 @@
+/*  CRYPTO STYLING */
+
+div.dotted-line {
+    border-top: 3px dotted #606060;
+}
+
+.crypto-content {
+    padding: 20px;
+    margin: auto;
+    height: 100vh;
+    overflow-y: scroll;
+    background-color: antiquewhite;
+    padding-bottom: 200px;
+}
+
+.crypto-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.word-container {
+    display: flex;
+    background-color: rgb(187, 187, 187);
+    padding: 2px;
+    border-radius: 1rem;
+    align-items: center;
+}
+
+.character-box {
+    background-color: lightgray;
+    font-size: 20px;
+    width: 30px;
+    height: 70px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.character-box-special {
+    font-size: 25px;
+    font-weight: bold;
+    width: 15px;
+    height: 70px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.character-box .guess-letter {
+    color: #777777;
+}
+
+.character-box .crypt-letter {
+    color: #2d2c2c;
+}
+
+.active {
+    border: 2px solid #00a2ff;
+}
+
+.stopwatch-container {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.wrong-choice {
+    border: 2px solid #ED4337;
+}
+
+.options {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.options button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.options button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.options button:active {
+    background-color: #004085;
+    transform: translateY(0);
+}
+
+
+@media (max-width: 600px) {
+    .crypto-container {
+        gap: 15px;
+    }
+
+    .character-box {
+        font-size: 15px;
+        width: 20px;
+        height: 60px;
+        border-radius: 6px;
+        margin: 2px;
+    }
+
+    .character-box-special {
+        font-size: 15px;
+        font-weight: bold;
+        width: 15px;
+        height: 60px;
+    }
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <div id="cryptogram-container" style="font-family: Arial, sans-serif; font-size: 24px; margin: 20px;">
+        <p id="encrypted-message" style="margin-bottom: 20px;">Encrypted Message: C Y P T O G R A M</p>
+        <p id="decrypted-message" style="margin-bottom: 20px;">Decrypted Message: _ _ _ _ _ _ _ _ _ _</p>
+
+        <div id="ctg" style="display: flex;">
+
+        </div>
+    </div>
+    <div id="feedback" style="color: red; margin-top: 10px;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const encryptedMessage = "B ZLJD WZD TZHBTD HU EDBCK".split("");
+            const correctMessage = "I HAVE THE CHOICE OF BEING".split(" "); // The correct answer
+            let decryptedMessage = new Array(correctMessage.length).fill('_');
+
+            encryptedMessage.forEach(element => {
+                console.log(element);
+            });
+
+
+
+
+
+            encryptedMessage.forEach(character => {
+                var container = document.createElement('div');
+                container.style.display = 'flex';
+                container.style.flexDirection = 'column';
+                container.style.alignItems = 'center'; // Center align horizontally
+                container.style.width = '50px'; // Adjust size
+                container.style.height = '100px'; // Adjust size
+
+                // Create the div for the upper character
+                var upperChar = document.createElement('div');
+                upperChar.innerHTML = ' '; // Upper character
+                upperChar.style.backgroundColor = 'red'; // Background color red
+                upperChar.style.color = 'white'; // Text color white
+                upperChar.style.fontSize = '24px'; // Font size
+                upperChar.style.textAlign = 'center';
+                upperChar.style.width = '100%';
+
+                // Create the div for the lower character
+                var lowerChar = document.createElement('div');
+                lowerChar.innerHTML = character; // Lower character
+                lowerChar.style.backgroundColor = 'yellow'; // Background color yellow
+                lowerChar.style.color = 'black'; // Text color black
+                lowerChar.style.fontSize = '24px'; // Font size
+                lowerChar.style.textAlign = 'center';
+                lowerChar.style.width = '100%';
+
+                // Append the divs to the container
+                container.appendChild(upperChar);
+                container.appendChild(lowerChar);
+                document.getElementById('ctg').appendChild(container);
+            });
+
+
+            const decryptedMessageElement = document.getElementById("decrypted-message");
+            const feedbackElement = document.getElementById("feedback");
+
+            // Function to update the display of the decrypted message
+            function updateDecryptedMessage() {
+                decryptedMessageElement.innerText = `Decrypted Message: ${decryptedMessage.join(" ")}`;
+            }
+
+            // Event listener for key presses
+            document.addEventListener('keydown', function (event) {
+                const keyPressed = event.key.toUpperCase();
+
+                if (/[A-Z]/.test(keyPressed)) { // Only process alphabetic characters
+                    let letterFound = false;
+                    correctMessage.forEach((letter, index) => {
+                        if (letter === keyPressed && decryptedMessage[index] === '_') {
+                            decryptedMessage[index] = keyPressed;
+                            letterFound = true;
+                        }
+                    });
+                    if (!letterFound) {
+                        feedbackElement.innerText = `Letter ${keyPressed} is not correct.`;
+                    } else {
+                        feedbackElement.innerText = "";
+                    }
+                    updateDecryptedMessage();
+                }
+
+                // Check if the puzzle is complete
+                if (decryptedMessage.join("") === correctMessage.join("")) {
+                    feedbackElement.innerText = "Congratulations! You've solved the cryptogram!";
+                }
+            });
+
+            updateDecryptedMessage(); // Initialize the decrypted message display
+        });
+    </script>
+</body>
+
+</html>

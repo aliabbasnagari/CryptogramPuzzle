@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Display and Replace</title>
+    <style>
+        div.dotted {
+            border-top: 3px dotted #606060;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .character-box {
+            background-color: lightgray;
+            font-size: 24px;
+            width: 40px;
+            height: 100px;
+            text-align: center;
+            align-content: center;
+            justify-content: center;
+            border-radius: 10px;
+            /* Center vertically */
+            cursor: pointer;
+            margin: 3px;
+        }
+
+        .character-box .guess-letter {
+            color: #777777;
+        }
+
+        .character-box .crypt-letter {
+            color: #2d2c2c;
+        }
+
+        .active {
+            border: 2px solid #e95c1f;
+        }
+
+        .word-container {
+            display: flex;
+        }
+
+        .options {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .options button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .options button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .options button:active {
+            background-color: #004085;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="options">
+        <button>New Game</button>
+        <button>Undo</button>
+        <button>Reset</button>
+        <button>Hint</button>
+        <button>Reveal</button>
+    </div>
+
+    <div id="quote"></div>
+
+    <div class="container" id="charContainer">
+        <div class="word-container" style="display: none;">
+            <div id="characterBox" class="character-box">
+                <span class="guess-letter">I</span>
+                <div class="dotted"></div>
+                <span class="crypt-letter">I</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        var gtarget = null;
+        const regex = /^[A-Z]$/;
+        const KEY = getRandomKey(2, 12);
+
+        fetchRandomQuote().then(word => {
+            if (word) {
+                console.log("Quote loaded.....", word);
+
+                console.log(KEY);
+
+                // Define the string
+                var encryptedText = 'B ZLJD WZD, TZHBTD HU EDBCK'.split(' ');
+                encryptedText = encryptQuote(word.quote, KEY, 0).split(' ');
+                console.log(encryptedText);
+
+                for (let i = 0; i < encryptedText.length; i++) {
+                    encryptedText[i] = encryptedText[i].split('');
+                }
+
+
+                // Get the container element
+                var container = document.getElementById('charContainer');
+
+                encryptedText.forEach(word => {
+                    var wordcontainer = document.createElement('div');
+                    wordcontainer.classList.add('word-container');
+                    word.forEach(char => {
+                        let valid = regex.test(char);
+                        let guessLetter = document.createElement('span');
+                        guessLetter.classList.add('guess-letter');
+
+                        let cryptLetter = document.createElement('span');
+                        cryptLetter.classList.add('crypt-letter');
+
+                        if (valid) {
+                            guessLetter.innerHTML = '&nbsp;';
+                        }
+                        cryptLetter.innerHTML = char;
+
+
+                        let sep = document.createElement('div');
+                        sep.classList.add('dotted');
+
+                        let charBox = document.createElement('div');
+                        charBox.classList.add('character-box');
+                        charBox.id = 'characterBox';
+                        charBox.appendChild(guessLetter);
+
+                        if (valid)
+                            charBox.appendChild(sep);
+
+                        charBox.appendChild(cryptLetter);
+
+                        if (valid) {
+                            charBox.addEventListener('click', function (e) {
+                                gtarget = cryptLetter;
+                                container.querySelectorAll("#characterBox").forEach(box => {
+                                    if (box.querySelector('.crypt-letter').innerHTML === gtarget.innerHTML) {
+                                        box.classList.add('active');
+                                    } else {
+                                        box.classList.remove('active');
+                                    }
+                                });
+                            });
+                        }
+                        wordcontainer.appendChild(charBox);
+                    });
+
+                    container.appendChild(wordcontainer);
+                });
+
+                document.addEventListener('keydown', function keyHandler(event) {
+                    if (event.key.length === 1) {
+                        var pval = gtarget.innerHTML;
+                        container.querySelectorAll("#characterBox").forEach(box => {
+                            let selected = box.querySelector('.guess-letter');
+                            if (box.querySelector('.crypt-letter').innerHTML === pval) {
+                                selected.innerHTML = event.key.toUpperCase();
+                            }
+                        });
+                    }
+                });
+            } else {
+                console.log("Failed to load quote.....");
+                // Handle the failure case if needed
+            }
+        });
+
+
+
+        function encryptQuote(text, keyword, mode) {
+            const result = [];
+            const keywordRepeated = repeatKeyword(keyword, text.length);
+            const keywordLength = keyword.length;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i].toUpperCase();
+
+                if (char >= 'A' && char <= 'Z') {
+                    const textIndex = char.charCodeAt(0) - 'A'.charCodeAt(0);
+                    const keywordIndex = keywordRepeated[i] - 'A'.charCodeAt(0);
+                    let newIndex;
+
+                    if (mode === 0) {
+                        newIndex = (textIndex + keywordIndex) % 26;
+                    } else if (mode === 1) {
+                        newIndex = (textIndex - keywordIndex + 26) % 26;
+                    }
+
+                    result.push(String.fromCharCode(newIndex + 'A'.charCodeAt(0)));
+                } else {
+                    result.push(char);
+                }
+            }
+
+            return result.join('');
+        }
+
+
+        function repeatKeyword(keyword, length) {
+            const repeated = [];
+            for (let i = 0; i < length; i++) {
+                repeated.push(keyword[i % keyword.length].charCodeAt(0));
+            }
+            return repeated;
+        }
+
+        console.log("ABCABC", encryptQuote("ABCABC", KEY, 0), encryptQuote(encryptQuote("ABCABC", KEY, 0), KEY, 1));
+        console.log("abcabc", encryptQuote("abcabc", KEY, 0), encryptQuote(encryptQuote("abcabc", KEY, 0), KEY, 1));
+
+        function getRandomKey(min, max) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let length = Math.floor(Math.random() * (max - min + 1)) + min;
+            let result = '';
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                result += characters[randomIndex];
+            }
+
+            return result;
+        }
+
+        async function fetchRandomQuote() {
+            let index = Math.floor(Math.random() * 2508);
+            try {
+                const response = await fetch(`https://datasets-server.huggingface.co/rows?dataset=Abirate%2Fenglish_quotes&config=default&split=train&offset=${index}&length=1`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+
+                const data = await response.json();
+                const firstRow = data.rows[0].row;
+                let quote = firstRow.quote;
+                let author = firstRow.author;
+                let tags = firstRow.tags.slice(0, 3).join(', ');
+
+                console.log('Quote:', quote);
+                console.log('Author:', author);
+                console.log('Top 3 Tags:', tags);
+
+                document.getElementById('quote').innerHTML = `
+            <p><strong>Quote:</strong> ${quote}</p>
+            <p><strong>Author:</strong> ${author}</p>
+            <p><strong>Top 3 Tags:</strong> ${tags}</p>
+        `;
+
+                return { quote, author, tags }; // Return data for use in other parts of your code
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return null; // Handle the error case and return null if fetch fails
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

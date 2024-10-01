@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky QWERTY Keyboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="crypt_style.css">
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h2>Game Over</h2>
+            <p>This is a custom designed popup message!</p>
+        </div>
+    </div>
+
+    <div class="crypto-content" id="cryptoContent">
+
+        <div class="options">
+            <button id="btnStart">Start New Game</button>
+            <button id="btnUndo">Undo</button>
+            <button id="btnReset">Reset</button>
+            <button id="btnHint">Hint</button>
+            <button id="btnReveal">Reveal</button>
+        </div>
+
+        <h1 style="width: 40px; margin:0; cursor:pointer;" id="toggleKeyboard">&#9000;</h1>
+        <h2 id="message" style="margin:0;">Click Start New Game button to play game...</h2>
+
+        <div class="stopwatch-container">
+            <div class="stopwatch" id="stopwatch">0:00:00</div>
+        </div>
+
+        <div id="quote">
+        </div>
+
+        <div class="crypto-container" id="cryptoContainer">
+            <div class="word-container">
+                <div id="characterBox" class="character-box">
+                    <span class="guess-letter">I</span>
+                    <div class="dotted-line"></div>
+                    <span class="crypt-letter">I</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-keyboard" id="customKeyboard">
+        <div class="key-row">
+            <button>Q</button>
+            <button>W</button>
+            <button>E</button>
+            <button>R</button>
+            <button>T</button>
+            <button>Y</button>
+            <button>U</button>
+            <button>I</button>
+            <button>O</button>
+            <button>P</button>
+        </div>
+        <div class="key-row">
+            <button>A</button>
+            <button>S</button>
+            <button>D</button>
+            <button>F</button>
+            <button>G</button>
+            <button>H</button>
+            <button>J</button>
+            <button>K</button>
+            <button>L</button>
+        </div>
+        <div class="key-row">
+            <button>Z</button>
+            <button>X</button>
+            <button>C</button>
+            <button>V</button>
+            <button>B</button>
+            <button>N</button>
+            <button>M</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Display and Replace</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .char-box {
+            background-color: lightgray;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            /* Center vertically */
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        .active {
+            border: 2px solid red;
+            /* Highlight clicked box */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="charContainer"></div>
+
+    <script>
+        // Define the string
+        var exp = 'hello this is a test';
+
+        // Get the container element
+        var container = document.getElementById('charContainer');
+
+        // Create divs for each character and append to the container
+        for (let i = 0; i < exp.length; i++) {
+            let charBox = document.createElement('div');
+            charBox.classList.add('char-box');
+            charBox.innerHTML = exp[i];  // Set character from the string
+            container.appendChild(charBox);
+        }
+
+        // Function to handle replacing a character
+        function replaceCharacter(target, newChar) {
+            target.innerHTML = newChar; // Replace character
+        }
+
+        // Add event listener for clicks on each character box
+        container.addEventListener('click', function (e) {
+            if (e.target && e.target.classList.contains('char-box')) {
+                // Remove the 'active' class from all boxes
+                document.querySelectorAll('.char-box').forEach(box => box.classList.remove('active'));
+
+                // Add the 'active' class to the clicked box
+                e.target.classList.add('active');
+
+                // Listen for keypress event
+                document.addEventListener('keydown', function keyHandler(event) {
+                    // Check if a character key is pressed (only letters or digits)
+                    if (event.key.length === 1) {
+                        // Replace the character
+                        var pval = e.target.innerHTML;
+                        document.querySelectorAll('.char-box').forEach(box => {
+                            if (box.innerHTML === pval) {
+                                replaceCharacter(box, event.key);
+                            }
+                        });
+                        replaceCharacter(e.target, event.key);
+
+                        // Remove the event listener once the key is pressed
+                        document.removeEventListener('keydown', keyHandler);
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

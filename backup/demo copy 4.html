@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Display and Replace</title>
+    <style>
+        div.dotted-line {
+            border-top: 3px dotted #606060;
+        }
+
+        .crypto-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .character-box {
+            background-color: lightgray;
+            font-size: 24px;
+            width: 40px;
+            height: 100px;
+            text-align: center;
+            align-content: center;
+            justify-content: center;
+            border-radius: 10px;
+            /* Center vertically */
+            cursor: pointer;
+            margin: 3px;
+        }
+
+        .character-box .guess-letter {
+            color: #777777;
+        }
+
+        .character-box .crypt-letter {
+            color: #2d2c2c;
+        }
+
+        .active {
+            border: 2px solid #e95c1f;
+        }
+
+        .word-container {
+            display: flex;
+        }
+
+        .options {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .options button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .options button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .options button:active {
+            background-color: #004085;
+            transform: translateY(0);
+        }
+
+        input {
+            width: 90%;
+            height: 45px;
+            font-size: 2rem;
+            text-align: center;
+            border: none;
+            background-color: transparent;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="options">
+        <button>New Game</button>
+        <button onclick="undo()">Undo</button>
+        <button>Reset</button>
+        <button>Hint</button>
+        <button>Reveal</button>
+    </div>
+
+    <h1>FOR TESTING PURPOSE ONLY</h1>
+    <div id="quote">
+    </div>
+
+    <div class="crypto-container" id="charContainer">
+        <div class="word-container">
+            <div id="characterBox" class="character-box">
+                <input maxlength="1" class="guess-letter" />
+                <div class="dotted-line"></div>
+                <input maxlength="1" class="crypt-letter" />
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+    </script>
+</body>
+
+</html>

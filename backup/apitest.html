@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read JSON Example</title>
+</head>
+
+<body>
+    <h1>JSON Data</h1>
+    <pre id="output"></pre>
+
+    <script>
+        // Fetch the JSONL file from Hugging Face
+        fetch('https://huggingface.co/datasets/Abirate/english_quotes/resolve/main/quotes.jsonl')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.text(); // Get the raw text of the response
+            })
+            .then(data => {
+                // Split the text into lines and parse each line as JSON
+                const lines = data.trim().split('\n'); // Split by new line
+                const jsonObjects = lines.map(line => JSON.parse(line)); // Parse each line into a JSON object
+
+                // Output the parsed JSON objects to the <pre> element
+                document.getElementById('output').textContent = JSON.stringify(jsonObjects, null, 2);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+
+    </script>
+</body>
+
+</html>

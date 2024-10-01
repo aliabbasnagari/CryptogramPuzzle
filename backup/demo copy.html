@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Display and Replace</title>
+    <style>
+        div.dotted {
+            border-top: 3px dotted #606060;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .char-box {
+            background-color: lightgray;
+            font-size: 24px;
+            width: 40px;
+            height: 100px;
+            text-align: center;
+            align-content: center;
+            justify-content: center;
+            border-radius: 10px;
+            /* Center vertically */
+            cursor: pointer;
+        }
+
+        .char-box .guessl {
+            color: #777777;
+        }
+
+        .char-box .cryptl {
+            color: #2d2c2c;
+        }
+
+        .active {
+            border: 2px solid #e95c1f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="charContainer">
+
+        <div id="cbox" class="char-box">
+            <span class="guessl">T</span>
+            <div class="dotted"></div>
+            <span class="cryptl">T</span>
+        </div>
+    </div>
+
+    <script>
+        var gtarget = null;
+        // Define the string
+        var exp = 'B ZLJD WZD TZHBTD HU EDBCK';
+
+        // Get the container element
+        var container = document.getElementById('charContainer');
+
+        // Create divs for each character and append to the container
+        for (let i = 0; i < exp.length; i++) {
+            let guessl = document.createElement('span');
+            guessl.classList.add('guessl');
+            if (exp[i] != ' ')
+                guessl.innerHTML = '?';
+
+            let cryptl = document.createElement('span');
+            cryptl.classList.add('cryptl');
+            if (exp[i] != ' ')
+                cryptl.innerHTML = exp[i];
+
+            let sep = document.createElement('div');
+            sep.classList.add('dotted');
+
+            let charBox = document.createElement('div');
+            charBox.classList.add('char-box');
+            charBox.id = 'cbox';
+            charBox.appendChild(guessl);
+            if (exp[i] != ' ')
+                charBox.appendChild(sep);
+            charBox.appendChild(cryptl);
+            charBox.addEventListener('click', function (e) {
+                gtarget = cryptl;
+                container.querySelectorAll("#cbox").forEach(box => {
+                    if (box.querySelector('.cryptl').innerHTML === gtarget.innerHTML) {
+                        box.classList.add('active');
+                    } else {
+                        box.classList.remove('active');
+                    }
+                });
+            });
+
+            container.appendChild(charBox);
+        }
+
+        // Function to handle replacing a character
+        function replaceCharacter(target, newChar) {
+            target.innerHTML = newChar.toUpperCase(); // Replace character
+        }
+
+        document.addEventListener('keydown', function keyHandler(event) {
+            if (event.key.length === 1) {
+                var pval = gtarget.innerHTML;
+                container.querySelectorAll("#cbox").forEach(box => {
+                    let selected = box.querySelector('.guessl');
+                    if (box.querySelector('.cryptl').innerHTML === pval) {
+                        selected.innerHTML = event.key.toUpperCase();
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
