@@ -1,8 +1,9 @@
 const regex = /^[A-Z]$/;
 var testidx = 0;
-var history = ["", ""];
+const history = [];
 var revealed = false;
 var gameStarted = false;
+var loading = false;
 var stopwatchInterval;
 var elapsedTime = 0;
 var hintsUsed = 0;
@@ -213,19 +214,34 @@ function formatWinTime(timeString) {
 	return parts.join(' ') || '0 seconds';
 }
 
-function updateCharacter(original, character) {
-	character = character.toUpperCase();
+function removePrevious(encrypted, character) {
+	let idx = DECRYPTED_QUOTE.findIndex((char, idx) => {
+		return char == character && ENCRYPTED_QUOTE_CHARS[idx] != encrypted;
+	});
+	if (idx != -1) {
+		updateCharacter(ENCRYPTED_QUOTE_CHARS[idx], "&nbsp;", true);
+	}
+}
+
+function updateCharacter(encrypted, character, undo = false) {
+	character = (character == "&nbsp;") ? character : character.toUpperCase();
+	if (!undo && character != "&nbsp;")
+		removePrevious(encrypted, character);
+	let previous = '';
 	container.querySelectorAll(".character-box").forEach((box) => {
 		let selected = box.querySelector(".guess-letter");
-		if (box.querySelector(".crypt-letter").innerHTML === original) {
-			DECRYPTED_QUOTE[box.index] = character;
-			history[0] = selected.innerHTML;
-			history[1] = character;
+		if (box.querySelector(".crypt-letter").innerHTML === encrypted) {
+			DECRYPTED_QUOTE[box.index] = (character == "&nbsp;") ? '' : character;
+			previous = selected.innerHTML;
 			selected.innerHTML = character;
 		}
 	});
 
-	if (arraysEqual(DECRYPTED_QUOTE, ORIGINAL_QUOTE) && !revealed) {
+	if (previous != '' && !undo) {
+		history.push([encrypted, previous, character]);
+	}
+
+	if (gameStarted && arraysEqual(DECRYPTED_QUOTE, ORIGINAL_QUOTE) && !revealed) {
 		console.log("WON");
 		gameStarted = false;
 		let title = popup.querySelector('h2');
@@ -242,35 +258,34 @@ function updateCharacter(original, character) {
 
 // Menu Options
 function startNewGame() {
-	stopStopwatch();
-	SUBSTITUTION_MAP = generateSubstitutionMap();
-	container.replaceChildren();
-	let marea = document.getElementById('message');
-	marea.innerHTML = "Loading Quote...";
-	fetchRandomQuote().then((response) => {
-		if (response) {
-			drawQuote(response.quote + ' -(' + response.author + ')');
-			//drawQuote("Ali Abbas Nagari");
-			marea.innerHTML = "";
-			gameStarted = true;
-			hintsUsed = 0;
-		} else {
-			console.log("Failed to load quote.....");
-			marea.innerHTML = "Failed to Load Quote...";
-		}
-	});
-	contentContainer.scrollIntoView({ behavior: 'smooth' });
+	if (!loading) {
+		stopStopwatch();
+		SUBSTITUTION_MAP = generateSubstitutionMap();
+		container.replaceChildren();
+		let marea = document.getElementById('message');
+		marea.innerHTML = "Loading Quote...";
+		loading = true;
+		fetchRandomQuote().then((response) => {
+			if (response) {
+				drawQuote(response.quote + ' -(' + response.author + ')');
+				//drawQuote("Ali Abbas Nagari");
+				marea.innerHTML = "";
+				gameStarted = true;
+				loading = false;
+				hintsUsed = 0;
+			} else {
+				console.log("Failed to load quote.....");
+				marea.innerHTML = "Failed to Load Quote...";
+			}
+		});
+		contentContainer.scrollIntoView({ behavior: 'smooth' });
+	}
 }
 
 function undoLatestMove() {
-	if (gameStarted) {
-		container.querySelectorAll(".guess-letter").forEach((box) => {
-			if (history[1] != "" && box.innerHTML === history[1]) {
-				box.innerHTML = history[0];
-			}
-		});
-		history[0] = "";
-		history[1] = "";
+	if (gameStarted && history.length > 0) {
+		const lastmove = history.pop();
+		updateCharacter(lastmove[0], lastmove[1], true);
 	}
 }
 
@@ -362,6 +377,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				Activate(ENCRYPTED_QUOTE[(ENCRYPTED_QUOTE.indexOf(CURR_SELECTED) + 1) % ENCRYPTED_QUOTE.length]);
 			}
+		} else if (event.key === 'Delete') {
+			updateCharacter(CURR_SELECTED, "&nbsp;");
 		} else if (event.key.length === 1 && regex.test(event.key.toUpperCase())) {
 			updateCharacter(CURR_SELECTED, event.key);
 		}
