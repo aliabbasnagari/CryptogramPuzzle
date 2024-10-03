@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			} else {
 				Activate(ENCRYPTED_QUOTE[(ENCRYPTED_QUOTE.indexOf(CURR_SELECTED) + 1) % ENCRYPTED_QUOTE.length]);
 			}
-		} else if (event.key === 'Delete') {
+		} else if (event.key === 'Delete' || event.key === 'Backspace') {
 			updateCharacter(CURR_SELECTED, "&nbsp;");
 		} else if (event.key.length === 1 && regex.test(event.key.toUpperCase())) {
 			updateCharacter(CURR_SELECTED, event.key);
