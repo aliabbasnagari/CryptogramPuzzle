@@ -347,8 +347,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	const buttons = vkeyboard.querySelectorAll('button');
 	buttons.forEach(button => {
 		button.addEventListener('click', () => {
-			if (CURR_SELECTED != "")
+			if (button.textContent === '☓') {
+				updateCharacter(CURR_SELECTED, "&nbsp;");
+			} else if (button.textContent === '⭾') {
+				if (CURR_SELECTED === "") {
+					Activate(ENCRYPTED_QUOTE[0]);
+				} else {
+					Activate(ENCRYPTED_QUOTE[(ENCRYPTED_QUOTE.indexOf(CURR_SELECTED) + 1) % ENCRYPTED_QUOTE.length]);
+				}
+			} else if (CURR_SELECTED != "") {
 				updateCharacter(CURR_SELECTED, button.textContent);
+			}
 			//console.log(`Button ${button.textContent} clicked`);
 		});
 	});
@@ -368,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	var toggleKeyboard = document.getElementById('toggleKeyboard');
-	toggleKeyboard.onclick = () => { vkeyboard.style.display = (vkeyboard.style.display === 'none') ? 'flex' : 'none'; }
+	toggleKeyboard.onclick = () => { vkeyboard.style.display = (vkeyboard.style.display === 'none' || vkeyboard.style.display === '') ? 'flex' : 'none'; }
 
 	document.addEventListener("keydown", function keyHandler(event) {
 		if (event.key === 'Tab') {
