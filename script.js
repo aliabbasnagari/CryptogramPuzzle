@@ -46,6 +46,7 @@ function updateStopwatchDisplay() {
 }
 
 function drawQuote(quote) {
+	history.length = 0;
 	revealed = false;
 	CURR_SELECTED = "";
 	quote = quote.toUpperCase();
